@@ -3,6 +3,8 @@
   "exclude": ["node_modules", "dist", "tests"],
   "compilerOptions": {
     "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist/types",
     "target": "ESNext",
     "module": "CommonJS",
     "strict": true,
