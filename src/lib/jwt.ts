@@ -36,7 +36,7 @@ function New(opts: JSONWebTokenConstructor): JSONWebToken {
   return new JSONWebToken(opts);
 }
 
-function Read(jwtstr: string, key: string): [boolean, JSONWebToken | null] {
+function Read(jwtstr: string, key: string): [boolean, (JSONWebToken | null)] {
   const [headerBase64, payloadBase64, signature] = jwtstr.split(".");
 
   if (!headerBase64 || !payloadBase64 || !signature) return [true, null];
@@ -49,12 +49,13 @@ function Read(jwtstr: string, key: string): [boolean, JSONWebToken | null] {
 
   const jwt = New({ header, payload, key });
 
-  if (jwt.signature !== signature) return [true, null];
+  if (jwt.signature !== signature) 
+    return [true, null];
 
   return [false, jwt];
 }
 
-function Validate(jwt: JSONWebToken, key: string): [boolean, JSONWebToken] {
+function Validate(jwt: JSONWebToken, key: string): boolean {
   const expirationDate = jwt.payload.exp;
   const notBefore = jwt.payload.nbf;
   const issuedAt = jwt.payload.iat;
@@ -62,13 +63,13 @@ function Validate(jwt: JSONWebToken, key: string): [boolean, JSONWebToken] {
   const now = Date.now();
   const check = Sign(jwt, key);
 
-  if (issuedAt && issuedAt > now) return [false, jwt];
-  if (notBefore && now < notBefore) return [false, jwt];
-  if (expirationDate && expirationDate < now) return [false, jwt];
-  if (!signature) return [false, jwt];
-  if (check !== signature) return [false, jwt];
+  if (issuedAt && issuedAt > now) return false;
+  if (notBefore && now < notBefore) return false;
+  if (expirationDate && expirationDate < now) return false;
+  if (!signature) return false;
+  if (check !== signature) return false;
 
-  return [true, jwt];
+  return true
 }
 
 function Sign(jwt: JSONWebToken, key: string) {
