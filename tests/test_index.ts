@@ -26,9 +26,9 @@ describe("JWT", function () {
   });
 
   it("can validate a jwt", function() {
-    const [a] = JWT.Validate(jwt, key);
+    const a = JWT.Validate(jwt, key);
     jwt.payload.aud = 'hehehe';
-    const [b] = JWT.Validate(jwt, key);
+    const b = JWT.Validate(jwt, key);
 
     expect(a).to.be.true;
     expect(b).to.be.false;
