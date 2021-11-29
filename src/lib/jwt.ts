@@ -1,6 +1,7 @@
-import * as crypto from "crypto";
-import base64url from "base64url";
-import { JWTRegisteredClaimNames, JWSRegisteredHeaderParameters } from "./base";
+import * as crypto from 'crypto';
+import base64url from 'base64url';
+// eslint-disable-next-line import/no-unresolved, import/extensions
+import { JWTRegisteredClaimNames, JWSRegisteredHeaderParameters } from './base';
 
 interface JSONWebTokenConstructor {
   key?: string;
@@ -10,15 +11,19 @@ interface JSONWebTokenConstructor {
 
 class JSONWebToken {
   readonly header: JWSRegisteredHeaderParameters;
+
   readonly payload: JWTRegisteredClaimNames;
+
   readonly signature?: string;
 
   constructor(opts: JSONWebTokenConstructor) {
     this.header = opts.header;
     this.payload = opts.payload;
-    
-    if (opts.key)
-        this.signature = Sign(this, opts.key);
+
+    if (opts.key) {
+      // eslint-disable-next-line no-use-before-define
+      this.signature = Sign(this, opts.key);
+    }
   }
 
   toString(): string {
@@ -36,8 +41,8 @@ function New(opts: JSONWebTokenConstructor): JSONWebToken {
   return new JSONWebToken(opts);
 }
 
-function Read(jwtstr: string, key: string): [boolean, (JSONWebToken | null)] {
-  const [headerBase64, payloadBase64, signature] = jwtstr.split(".");
+function Read(jwtstr: string, key: string): [boolean, JSONWebToken | null] {
+  const [headerBase64, payloadBase64, signature] = jwtstr.split('.');
 
   if (!headerBase64 || !payloadBase64 || !signature) return [true, null];
 
@@ -49,8 +54,7 @@ function Read(jwtstr: string, key: string): [boolean, (JSONWebToken | null)] {
 
   const jwt = New({ header, payload, key });
 
-  if (jwt.signature !== signature) 
-    return [true, null];
+  if (jwt.signature !== signature) return [true, null];
 
   return [false, jwt];
 }
@@ -59,8 +63,9 @@ function Validate(jwt: JSONWebToken, key: string): boolean {
   const expirationDate = jwt.payload.exp;
   const notBefore = jwt.payload.nbf;
   const issuedAt = jwt.payload.iat;
-  const signature = jwt.signature;
+  const { signature } = jwt;
   const now = Date.now();
+  // eslint-disable-next-line no-use-before-define
   const check = Sign(jwt, key);
 
   if (issuedAt && issuedAt > now) return false;
@@ -69,7 +74,7 @@ function Validate(jwt: JSONWebToken, key: string): boolean {
   if (!signature) return false;
   if (check !== signature) return false;
 
-  return true
+  return true;
 }
 
 function Sign(jwt: JSONWebToken, key: string) {
@@ -81,10 +86,9 @@ function Sign(jwt: JSONWebToken, key: string) {
 
   const toSign = `${headerBase64}.${payloadBase64}`;
 
-  return crypto
-    .createHmac(jwt.header.alg, key)
-    .update(toSign)
-    .digest("base64");
+  return crypto.createHmac(jwt.header.alg, key).update(toSign).digest('base64');
 }
 
-export { New, Read, Validate, Sign };
+export {
+  New, Read, Validate, Sign,
+};
