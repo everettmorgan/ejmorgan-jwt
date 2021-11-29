@@ -1,17 +1,22 @@
 {
-  "name": "---name---",
+  "name": "ejmorgan-jwt",
   "version": "1.0.0",
+  "files": [
+    "dist",
+    "src"
+  ],
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/types",
   "license": "MIT",
-  "description": "---description---",
-  "repository": "git@github.com:everettmorgan/base-ts.git",
+  "description": "A simple implementation of the JWT rfc spec.",
+  "repository": "git@github.com:everettmorgan/jwt.git",
   "author": "Everett Morgan",
   "scripts": {
     "tsc": "./node_modules/typescript/bin/tsc",
     "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ./node_modules/ts-node/register/index.js 'tests/**/*.ts'"
   },
   "dependencies": {
+    "base64url": "^3.0.1",
     "dotenv": "^10.0.0",
     "uuid": "^8.3.2"
   },
