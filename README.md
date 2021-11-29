@@ -1,11 +1,11 @@
-# ejmorgan-auth
+# ejmorgan-jwt
 
 A simple implementation of the JWT rfc spec.
 
 ## Usage
 
 ```javascript
-const JWT = require("./dist/index");
+const JWT = require("ejmorgan-jwt");
 
 const jwt = JWT.New({
   key: 'my-key',
