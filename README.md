@@ -1,3 +1,3 @@
-# Base Typescript Project
+# ejmorgan-auth
 
-A description goes here.
+A simple implementation of the JWT rfc spec.
